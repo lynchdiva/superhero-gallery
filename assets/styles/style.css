@@ -80,6 +80,7 @@ body {
   position: absolute;
   top: 0;
 
+  overflow: scroll;
   transform: rotateY(180deg);
 }
 
