@@ -152,7 +152,20 @@ body {
   background-size: contain;
   background-repeat: no-repeat;
   background-origin: content-box;
+  background-color: transparent;
+
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+
   cursor: pointer;
+}
+
+.card__star-label:active,
+.card__star-label:focus {
+  background-color: transparent;
+  outline: none;
+  box-shadow: none;
 }
 
 .card__star-label_filled {
