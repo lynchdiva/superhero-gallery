@@ -2,7 +2,7 @@
 
 const cardsData = JSON.parse(`[
   {
-    "name": "Бетмен",
+    "name": "Бэтмен",
     "universe": "DC Comics",
     "alterego": "Брюс Уэйн",
     "occupation": "борец с преступностью, филантроп, миллиардер",
@@ -77,7 +77,7 @@ const cardsData = JSON.parse(`[
     "alterego": "Диана Принс",
     "occupation": "супергероиня, секретарь-референт",
     "friends": "Лига Справедливости, Бэтмен, Супермен",
-    "superpowers": "сверхчеловеческая сила искорость, выносливость, полёт",
+    "superpowers": "сверхчеловеческая сила и скорость, выносливость, полёт",
     "url": "https://sun9-10.userapi.com/impg/cZyvL2H26at2DBVgUOLGUrGSBfdEWq8UOBu9CQ/iZH7qeXxy_0.jpg?size=547x397&quality=95&sign=92b76aa9ee79a0b998f742a55846747f&type=album",
     "info": "Пора бы разбавить эту мужскую вечеринку по-настоящему крутой девчонкой :) Принцесса-амозонка родилась на мистическом острове Темескира, расположенном в центре Бермудского треугольника, где пропадают самолеты. Своё настоящее имя Диана она получила в честь древнегреческой богини охоты, а суперспособности от богини любви Афродиты. Растили героиню в исключительно женском обществе, поэтому Чудо-женщина часто появляется в культуре как символ феминизма. У Дианы есть супер-снаряжение: лассо истины и тиара. Первое было сковано богом огня Гефестом, и оно никогда не промахивается. Человек, попавший в его петлю, неизбежно расскажет свои секреты, вспомнит забытое и даже подчинится приказам. Тиара же работает как метательное оружие, способное рассечь что угодно. Корона со звездой в центре символизирует патриотизм американской героини и служит стильным аксессуаром :)"
   },
@@ -102,8 +102,36 @@ const cardsData = JSON.parse(`[
     "info": "Как и Росомаха из Людей Икс, Дэдпул был подвергнут опытам по программе «Оружие Икс». Ученые попытались исцелить его рак, привив его клеткам способность к регенерации. Как и всегда в комиксах, что-то пошло не так, и Дэдпул остался изуродованным и психически нестабильным. Это единственный супергерой из списка, который однозначно не на стороне добра. Дэдпул наслаждается насилием. Первоначально появившись в основной Вселенной Marvel, он получил альтернативные варианты в других реальностях Мультивселенной. Что оставалось неизменным — его циничное, чёрное чувство юмора: за него Дэдпула прозвали «Болтливым наёмником»"
   }
 ]`);
-
 cardsData.forEach(cardData => createCard(cardData));
+
+const animationContainers = document.querySelectorAll(
+  '.card__animation-container'
+);
+animationContainers.forEach(container =>
+  container.addEventListener('click', function flipCard() {
+    container.classList.toggle('card__animation-container_flip');
+  })
+);
+
+const ratingContainers = document.querySelectorAll('.card__rating-container');
+ratingContainers.forEach(container => {
+  addHighlightEffectToStars(container);
+
+  const ratingButtons = container.querySelectorAll('.card__star-radio');
+  ratingButtons.forEach(button => {
+    button.addEventListener('change', function () {
+      removeHighlightEffectToStars(container);
+
+      const rating = button.value;
+
+      setRating(rating, container);
+
+      saveRatingInLocalStorage(rating, button);
+    });
+  });
+});
+
+restoreRatings();
 
 function createCard(cardData) {
   const gallery = document.querySelector('.gallery');
@@ -117,7 +145,7 @@ function createCard(cardData) {
           </div>
           <div class="card">
             <h2 class="card__title">${cardData.name}</h2>
-            <button class="card__button-rotate" type="button"></button>
+            <img class="card__click-img" src="./assets/images/click.png" alt="inscription click"></img>
             <p class="card__text">
               <span class="card__desc">Вселенная: </span>${cardData.universe}
             </p>
@@ -188,38 +216,6 @@ function createCard(cardData) {
 
   gallery.append(cardContainer);
 }
-
-const animationContainers = document.querySelectorAll(
-  '.card__animation-container'
-);
-
-animationContainers.forEach(container =>
-  container.addEventListener('click', function flipCard() {
-    container.classList.toggle('card__animation-container_flip');
-  })
-);
-
-const ratingContainers = document.querySelectorAll('.card__rating-container');
-
-ratingContainers.forEach(container => {
-  addHighlightEffectToStars(container);
-
-  const ratingButtons = container.querySelectorAll('.card__star-radio');
-
-  ratingButtons.forEach(button => {
-    button.addEventListener('change', function () {
-      removeHighlightEffectToStars(container);
-
-      const rating = button.value;
-
-      setRating(rating, container);
-
-      saveRatingInLocalStorage(rating, button);
-    });
-  });
-});
-
-restoreRatings();
 
 function addHighlightEffectToStars(container) {
   container.addEventListener('mouseover', toogleHighlightStars);
@@ -298,7 +294,6 @@ function restoreRatings() {
   if (!ratings) return;
 
   const cards = document.querySelectorAll('.card');
-
   cards.forEach(card => {
     const name = card.querySelector('.card__title').textContent;
 
@@ -306,9 +301,9 @@ function restoreRatings() {
 
     for (let data of ratings) {
       if (data.name === name) {
-        setRating(data.rating, container);
-
         removeHighlightEffectToStars(container);
+
+        setRating(data.rating, container);
       }
     }
   });
