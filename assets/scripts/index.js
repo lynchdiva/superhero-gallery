@@ -139,8 +139,7 @@ function createCard(cardData) {
 
   cardContainer.classList.add('card__animation-container');
 
-  cardContainer.innerHTML = `<div class="card__animation-container">
-          <div class="card-other-side">
+  cardContainer.innerHTML = `<div class="card-other-side">
             <p class="card-other-side__info">${cardData.info}</p>
           </div>
           <div class="card">
@@ -211,8 +210,7 @@ function createCard(cardData) {
                 />
               </label>
             </div>
-          </div>
-        </div>`;
+          </div>`;
 
   gallery.append(cardContainer);
 }
